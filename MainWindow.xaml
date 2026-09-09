@@ -1,0 +1,834 @@
+﻿<Window x:Class="HiddenFeaturesExplorer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:HiddenFeaturesExplorer.ViewModels"
+        xmlns:conv="clr-namespace:HiddenFeaturesExplorer.Converters"
+        Title="Hidden Features Explorer" 
+        Height="800" Width="1280"
+        MinHeight="600" MinWidth="900"
+        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource ModernWindow}"
+        Background="{DynamicResource WindowBgBrush}"
+        Foreground="{DynamicResource PrimaryTextBrush}">
+
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ===== LEFT SIDEBAR ===== -->
+        <Border Grid.Column="0" Background="{DynamicResource SurfaceBgBrush}" 
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
+            <DockPanel>
+                <!-- Logo -->
+                <Border DockPanel.Dock="Top" Padding="20,20,20,10">
+                    <StackPanel>
+                        <TextBlock Text="&#xE7C3;" FontFamily="Segoe MDL2 Assets" FontSize="28" 
+                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Hidden Features" FontSize="16" FontWeight="Bold" 
+                                   Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                        <TextBlock Text="Explorer" FontSize="16" FontWeight="Bold"
+                                   Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- System Info -->
+                <Border DockPanel.Dock="Bottom" Padding="16,10" Margin="12,0,12,12" 
+                        Background="{DynamicResource CardBgBrush}" CornerRadius="8">
+                    <StackPanel>
+                        <TextBlock Text="{Binding SystemInfoText}" FontSize="10" 
+                                   Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Navigation -->
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8,0,8,0">
+                    <StackPanel Margin="0,8">
+                        <!-- Section Label -->
+                        <TextBlock Text="NAVIGATION" FontSize="10" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SecondaryTextBrush}" 
+                                   Margin="12,8,12,8"/>
+
+                        <!-- Home -->
+                        <Border x:Name="NavHome" Style="{StaticResource NavItemStyle}"
+                                Background="{Binding SelectedNavIndex, Converter={StaticResource NavToBg}, ConverterParameter=home}"
+                                MouseLeftButtonDown="NavHome_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                           Foreground="{Binding SelectedNavIndex, Converter={StaticResource NavToFg}, ConverterParameter=home}"
+                                           VerticalAlignment="Center" Width="28"/>
+                                <TextBlock Text="Discover" FontSize="13"
+                                           Foreground="{Binding SelectedNavIndex, Converter={StaticResource NavToFg}, ConverterParameter=home}"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Favorites -->
+                        <Border x:Name="NavFav" Style="{StaticResource NavItemStyle}"
+                                Background="{Binding SelectedNavIndex, Converter={StaticResource NavToBg}, ConverterParameter=favorites}"
+                                MouseLeftButtonDown="NavFav_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE734;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                           Foreground="{Binding SelectedNavIndex, Converter={StaticResource NavToFg}, ConverterParameter=favorites}"
+                                           VerticalAlignment="Center" Width="28"/>
+                                <TextBlock Text="Favorites" FontSize="13"
+                                           Foreground="{Binding SelectedNavIndex, Converter={StaticResource NavToFg}, ConverterParameter=favorites}"
+                                           VerticalAlignment="Center"/>
+                                <Border Background="{DynamicResource AccentBrush}" CornerRadius="10" 
+                                        Padding="6,2" Margin="8,0,0,0" HorizontalAlignment="Right">
+                                    <TextBlock Text="{Binding TotalFavorites}" FontSize="10" 
+                                               Foreground="White" FontWeight="Bold"/>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Recent -->
+                        <Border x:Name="NavRecent" Style="{StaticResource NavItemStyle}"
+                                Background="{Binding SelectedNavIndex, Converter={StaticResource NavToBg}, ConverterParameter=recent}"
+                                MouseLeftButtonDown="NavRecent_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE81C;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                           Foreground="{Binding SelectedNavIndex, Converter={StaticResource NavToFg}, ConverterParameter=recent}"
+                                           VerticalAlignment="Center" Width="28"/>
+                                <TextBlock Text="Recently Discovered" FontSize="13"
+                                           Foreground="{Binding SelectedNavIndex, Converter={StaticResource NavToFg}, ConverterParameter=recent}"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Settings -->
+                        <Border x:Name="NavSettings" Style="{StaticResource NavItemStyle}"
+                                Background="{Binding SelectedNavIndex, Converter={StaticResource NavToBg}, ConverterParameter=settings}"
+                                MouseLeftButtonDown="NavSettings_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                           Foreground="{Binding SelectedNavIndex, Converter={StaticResource NavToFg}, ConverterParameter=settings}"
+                                           VerticalAlignment="Center" Width="28"/>
+                                <TextBlock Text="Settings" FontSize="13"
+                                           Foreground="{Binding SelectedNavIndex, Converter={StaticResource NavToFg}, ConverterParameter=settings}"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Separator -->
+                        <Separator Background="{DynamicResource BorderBrush}" Margin="12,12"/>
+
+                        <!-- Categories -->
+                        <TextBlock Text="CATEGORIES" FontSize="10" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SecondaryTextBrush}" 
+                                    Margin="12,8,12,8"/>
+
+                        <ItemsControl ItemsSource="{Binding Categories}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource NavItemStyle}"
+                                            MouseLeftButtonDown="Category_Click"
+                                            Tag="{Binding Category}"
+                                            Padding="12,8">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                                       Foreground="{Binding Color, Converter={StaticResource CatToColor}}"
+                                                       Text="{Binding IconGlyph}"
+                                                       VerticalAlignment="Center" Width="28"/>
+                                            <TextBlock Text="{Binding DisplayName}" FontSize="12"
+                                                       Foreground="{DynamicResource PrimaryTextBrush}"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding FeatureCount}" FontSize="10"
+                                                       Foreground="{DynamicResource SecondaryTextBrush}"
+                                                       VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Top Bar with Search -->
+            <Border Grid.Row="0" Padding="28,20,28,16" Background="{DynamicResource SurfaceBgBrush}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Title -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+                        <TextBlock Text="Discover Windows' Hidden Power" FontSize="22" FontWeight="Bold"
+                                   Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
+                        <Border Background="{DynamicResource AccentBrush}" CornerRadius="6" 
+                                Padding="8,3" Margin="12,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding TotalFeatures}" FontSize="11" 
+                                       Foreground="White" FontWeight="Bold"/>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Search Bar -->
+                    <Grid Grid.Row="1" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Background="{DynamicResource SearchBgBrush}" CornerRadius="12"
+                                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                                Padding="4">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="Segoe MDL2 Assets" 
+                                           FontSize="18" Foreground="{DynamicResource SecondaryTextBrush}"
+                                           VerticalAlignment="Center" Margin="12,0"/>
+
+                                <TextBox Grid.Column="1" x:Name="SearchBox"
+                                         Style="{StaticResource SearchTextBox}"
+                                         Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                                         Background="Transparent" BorderThickness="0"
+                                         Padding="8,12" FontSize="15"
+                                         VerticalContentAlignment="Center"/>
+
+                                <TextBlock Grid.Column="1" 
+                                           Text="What do you want to do?" 
+                                           FontSize="15"
+                                           Foreground="{DynamicResource SecondaryTextBrush}"
+                                           VerticalAlignment="Center" Margin="24,0,0,0"
+                                           IsHitTestVisible="False">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+
+                                <Button Grid.Column="2" Content="&#xE74E;" FontFamily="Segoe MDL2 Assets"
+                                        Style="{StaticResource IconButton}" Command="{Binding SearchCommand}"
+                                        FontSize="18" Margin="4,0,8,0"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <!-- Quick Suggestions -->
+                    <ItemsControl Grid.Row="2" ItemsSource="{Binding SearchSuggestions}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{DynamicResource CardBgBrush}" CornerRadius="16"
+                                        Padding="12,6" Margin="0,0,8,6" Cursor="Hand"
+                                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                                        MouseLeftButtonDown="Suggestion_Click" Tag="{Binding}">
+                                    <TextBlock Text="{Binding}" FontSize="12" 
+                                               Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Border>
+
+            <!-- Status Bar -->
+            <Border Grid.Row="1" Padding="28,6" Background="{DynamicResource SurfaceBgBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1">
+                <TextBlock Text="{Binding StatusMessage}" FontSize="11" 
+                           Foreground="{DynamicResource SecondaryTextBrush}"/>
+            </Border>
+
+            <!-- Content Area -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Padding="0,8">
+                    <StackPanel Margin="28,16,28,28">
+
+                        <!-- SETTINGS VIEW -->
+                        <StackPanel Visibility="{Binding SelectedNavIndex, Converter={StaticResource BoolToVis}, ConverterParameter=settings}">
+                            <!-- This is handled via a DataTrigger below -->
+                        </StackPanel>
+
+                        <!-- HOME: Featured Section -->
+                        <StackPanel Visibility="{Binding SelectedNavIndex, Converter={StaticResource BoolToVis}, ConverterParameter=home}">
+                            <TextBlock Text="⭐ Featured" FontSize="18" FontWeight="Bold"
+                                       Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,12"/>
+                            <ItemsControl ItemsSource="{Binding FeaturedFeatures}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource CardStyle}" Width="260" Margin="0,0,12,12"
+                                                Cursor="Hand" Opacity="1"
+                                                MouseLeftButtonDown="FeatureCard_Click" Tag="{Binding}">
+                                            <StackPanel>
+                                                <!-- Tags -->
+                                                <ItemsControl ItemsSource="{Binding Tags}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Style="{StaticResource TagStyle}"
+                                                                    Background="{Binding Color, Converter={StaticResource CatToColor}}" Opacity="0.2">
+                                                                <TextBlock FontSize="10" Foreground="{Binding Color, Converter={StaticResource CatToColor}}">
+                                                                    <Run Text="{Binding Icon, Mode=OneWay}"/><Run Text=" "/><Run Text="{Binding Label, Mode=OneWay}"/>
+                                                                </TextBlock>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+
+                                                <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,8,0,4"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Text="{Binding SimpleExplanation}" FontSize="12"
+                                                           Foreground="{DynamicResource SecondaryTextBrush}" 
+                                                           TextWrapping="Wrap" MaxHeight="36"
+                                                           TextTrimming="CharacterEllipsis"/>
+
+                                                <!-- Bottom row -->
+                                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                                    <Border CornerRadius="4" Padding="6,2"
+                                                            Background="{Binding Category, Converter={StaticResource CatToColor}}" Opacity="0.15">
+                                                        <TextBlock Text="{Binding Category}" FontSize="10"
+                                                                   Foreground="{Binding Category, Converter={StaticResource CatToColor}}"/>
+                                                    </Border>
+                                                    <TextBlock Text="{Binding Difficulty, Converter={StaticResource DiffToText}}"
+                                                               FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}"
+                                                               VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Recommended Section -->
+                            <TextBlock Text="🔥 Recommended For You" FontSize="18" FontWeight="Bold"
+                                       Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,24,0,12"/>
+                            <ItemsControl ItemsSource="{Binding RecommendedFeatures}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource CardStyle}" Width="260" Margin="0,0,12,12"
+                                                Cursor="Hand"
+                                                MouseLeftButtonDown="FeatureCard_Click" Tag="{Binding}">
+                                            <StackPanel>
+                                                <ItemsControl ItemsSource="{Binding Tags}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Style="{StaticResource TagStyle}"
+                                                                    Background="{Binding Color, Converter={StaticResource CatToColor}}" Opacity="0.2">
+                                                                <TextBlock FontSize="10" Foreground="{Binding Color, Converter={StaticResource CatToColor}}">
+                                                                    <Run Text="{Binding Icon, Mode=OneWay}"/><Run Text=" "/><Run Text="{Binding Label, Mode=OneWay}"/>
+                                                                </TextBlock>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+
+                                                <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,8,0,4"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" 
+                                                           TextWrapping="Wrap" MaxHeight="36"
+                                                           TextTrimming="CharacterEllipsis">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Text" Value="{Binding SimpleExplanation}"/>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+
+                                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                                    <Border CornerRadius="4" Padding="6,2"
+                                                            Background="{Binding Category, Converter={StaticResource CatToColor}}" Opacity="0.15">
+                                                        <TextBlock Text="{Binding Category}" FontSize="10"
+                                                                   Foreground="{Binding Category, Converter={StaticResource CatToColor}}"/>
+                                                    </Border>
+                                                    <TextBlock Text="{Binding Difficulty, Converter={StaticResource DiffToText}}"
+                                                               FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}"
+                                                               VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                    <Border CornerRadius="4" Padding="6,2" Background="#FFD70020" Margin="4,0,0,0">
+                                                        <TextBlock FontSize="10" Foreground="#FFD700">
+                                                            <Run Text="⭐"/><Run Text=" "/><Run Text="{Binding UsefulnessScore, StringFormat=F1, Mode=OneWay}"/>
+                                                        </TextBlock>
+                                                    </Border>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <!-- SEARCH RESULTS / CATEGORY VIEW -->
+                        <StackPanel>
+                            <TextBlock Text="Search Results" FontSize="18" FontWeight="Bold"
+                                       Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,12"
+                                       x:Name="SearchResultsHeader" Visibility="Collapsed"/>
+
+                            <ItemsControl ItemsSource="{Binding SearchResults}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource CardStyle}" Width="260" Margin="0,0,12,12"
+                                                Cursor="Hand"
+                                                MouseLeftButtonDown="FeatureCard_Click" Tag="{Binding}">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <!-- Tags & Favorite -->
+                                                <Grid Grid.Row="0">
+                                                    <ItemsControl ItemsSource="{Binding Tags}" HorizontalAlignment="Left">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <WrapPanel/>
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Border Style="{StaticResource TagStyle}"
+                                                                        Background="{Binding Color, Converter={StaticResource CatToColor}}" Opacity="0.2">
+                                                                    <TextBlock FontSize="9" Foreground="{Binding Color, Converter={StaticResource CatToColor}}">
+                                                                        <Run Text="{Binding Icon, Mode=OneWay}"/><Run Text=" "/><Run Text="{Binding Label, Mode=OneWay}"/>
+                                                                    </TextBlock>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+
+                                                    <Button Grid.Column="1" HorizontalAlignment="Right"
+                                                            Command="{Binding DataContext.ToggleFavoriteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource IconButton}">
+                                                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="16"
+                                                                   Text="{Binding IsFavorite, Converter={StaticResource FavIcon}}"
+                                                                   Foreground="{Binding IsFavorite, Converter={StaticResource FavColor}}"/>
+                                                    </Button>
+                                                </Grid>
+
+                                                <!-- Name -->
+                                                <TextBlock Grid.Row="1" Text="{Binding Name}" FontSize="15" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,8,0,4"
+                                                           TextTrimming="CharacterEllipsis"/>
+
+                                                <!-- Explanation -->
+                                                <TextBlock Grid.Row="2" FontSize="12"
+                                                           Foreground="{DynamicResource SecondaryTextBrush}" 
+                                                           TextWrapping="Wrap" Margin="0,0,0,4">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Text" Value="{Binding SimpleExplanation}"/>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+
+                                                <!-- Why Useful -->
+                                                <TextBlock Grid.Row="3" FontSize="11"
+                                                           Foreground="{DynamicResource SecondaryTextBrush}" 
+                                                           TextWrapping="Wrap" Margin="0,0,0,8" Opacity="0.7">
+                                                    <Run Text="Why: "/><Run Text="{Binding WhyUseful, Mode=OneWay}"/>
+                                                </TextBlock>
+
+                                                <!-- How to Access -->
+                                                <Border Grid.Row="4" Background="{DynamicResource WindowBgBrush}" 
+                                                        CornerRadius="6" Padding="10,8" Margin="0,0,0,8">
+                                                    <TextBlock FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" 
+                                                               TextWrapping="Wrap">
+                                                        <Run Text="How: " FontWeight="SemiBold"/><Run Text="{Binding HowToAccess, Mode=OneWay}"/>
+                                                    </TextBlock>
+                                                </Border>
+
+                                                <!-- Bottom Row -->
+                                                <Grid Grid.Row="5">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                                        <Border CornerRadius="4" Padding="6,2"
+                                                                Background="{Binding Category, Converter={StaticResource CatToColor}}" Opacity="0.15">
+                                                            <TextBlock Text="{Binding Category}" FontSize="10"
+                                                                       Foreground="{Binding Category, Converter={StaticResource CatToColor}}"/>
+                                                        </Border>
+                                                        <TextBlock Text="{Binding Difficulty, Converter={StaticResource DiffToText}}"
+                                                                   FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}"
+                                                                   VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                    </StackPanel>
+
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Safety, Converter={StaticResource SafetyToText}}"
+                                                                   FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}"
+                                                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                        <Button x:Name="LaunchBtn" Content="Open →" 
+                                                                Style="{StaticResource PrimaryButton}"
+                                                                FontSize="11" Padding="10,4"
+                                                                Command="{Binding DataContext.LaunchFeatureCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                CommandParameter="{Binding}"
+                                                                Visibility="{Binding CanLaunch, Converter={StaticResource BoolToVis}}"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <!-- FAVORITES VIEW -->
+                        <StackPanel x:Name="FavoritesView">
+                            <TextBlock Text="⭐ Your Favorites" FontSize="18" FontWeight="Bold"
+                                       Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,4"/>
+                            <TextBlock Text="Features you've bookmarked for quick access" FontSize="12"
+                                       Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,16"/>
+
+                            <ItemsControl ItemsSource="{Binding FavoriteFeatures}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource CardStyle}" Width="260" Margin="0,0,12,12"
+                                                Cursor="Hand"
+                                                MouseLeftButtonDown="FeatureCard_Click" Tag="{Binding}">
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold"
+                                                               Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
+                                                    <Button HorizontalAlignment="Right"
+                                                            Command="{Binding DataContext.ToggleFavoriteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource IconButton}">
+                                                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                                                   Text="&#xE734;" Foreground="#FFD700"/>
+                                                    </Button>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding SimpleExplanation}" FontSize="12"
+                                                           Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <TextBlock Text="No favorites yet. Click the ★ on any feature to save it here."
+                                       FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}"
+                                       HorizontalAlignment="Center" Margin="0,40,0,0"
+                                       Visibility="{Binding TotalFavorites, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+
+                        <!-- RECENTLY DISCOVERED VIEW -->
+                        <StackPanel x:Name="RecentView">
+                            <TextBlock Text="🕐 Recently Discovered" FontSize="18" FontWeight="Bold"
+                                       Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,4"/>
+                            <TextBlock Text="Features you've recently explored" FontSize="12"
+                                       Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,16"/>
+
+                            <ItemsControl ItemsSource="{Binding RecentlyDiscoveredFeatures}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource CardStyle}" Width="260" Margin="0,0,12,12"
+                                                Cursor="Hand"
+                                                MouseLeftButtonDown="FeatureCard_Click" Tag="{Binding}">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                <TextBlock Text="{Binding SimpleExplanation}" FontSize="12"
+                                                           Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <!-- SETTINGS VIEW CONTENT -->
+                        <StackPanel x:Name="SettingsView" Margin="0,8">
+                            <TextBlock Text="⚙ Settings" FontSize="18" FontWeight="Bold"
+                                       Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,16"/>
+
+                            <!-- Theme Toggle -->
+                            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,12">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Dark Mode" FontSize="14" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        <TextBlock Text="Switch between dark and light theme" FontSize="12"
+                                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                    </StackPanel>
+                                    <ToggleButton Grid.Column="1" x:Name="ThemeToggle"
+                                                  IsChecked="{Binding IsDarkTheme}"
+                                                  Width="48" Height="24" Margin="16,0,0,0"
+                                                  Cursor="Hand"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Explain Simply Toggle -->
+                            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,12">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Explain It Simply" FontSize="14" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                        <TextBlock Text="Show simple explanations for technical features" FontSize="12"
+                                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                    </StackPanel>
+                                    <ToggleButton Grid.Column="1" x:Name="ExplainToggle"
+                                                  IsChecked="{Binding ExplainSimply}"
+                                                  Width="48" Height="24" Margin="16,0,0,0"
+                                                  Cursor="Hand"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- About -->
+                            <Border Style="{StaticResource CardStyle}">
+                                <StackPanel>
+                                    <TextBlock Text="About" FontSize="14" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                    <TextBlock Text="Hidden Features Explorer v1.0" FontSize="12"
+                                               Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,4,0,0"/>
+                                    <TextBlock Text="{Binding SystemInfoText}" FontSize="11"
+                                               Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,4,0,0"/>
+                                    <TextBlock Text="Discover powerful Windows features you never knew existed." FontSize="12"
+                                               Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- ===== DETAIL PANEL (RIGHT SIDE) ===== -->
+                <Border Grid.Column="1" x:Name="DetailPanel" Width="380"
+                        Background="{DynamicResource SurfaceBgBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1,0,0,0"
+                        Visibility="{Binding ShowDetailPanel, Converter={StaticResource BoolToVis}}">
+                    <DockPanel>
+                        <!-- Detail Header -->
+                        <Border DockPanel.Dock="Top" Padding="20,16" 
+                                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Feature Details" FontSize="14" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Content="✕" Style="{StaticResource IconButton}"
+                                        FontSize="14" Command="{Binding CloseDetailCommand}"
+                                        VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Detail Content -->
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20,16">
+                            <StackPanel DataContext="{Binding SelectedFeature}">
+                                <!-- Feature Name -->
+                                <TextBlock Text="{Binding Name}" FontSize="20" FontWeight="Bold"
+                                           Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,8"/>
+
+                                <!-- Tags -->
+                                <ItemsControl ItemsSource="{Binding Tags}" Margin="0,0,0,12">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource TagStyle}"
+                                                    Background="{Binding Color, Converter={StaticResource CatToColor}}" Opacity="0.2">
+                                                <TextBlock FontSize="11" Foreground="{Binding Color, Converter={StaticResource CatToColor}}">
+                                                    <Run Text="{Binding Icon, Mode=OneWay}"/><Run Text=" "/><Run Text="{Binding Label, Mode=OneWay}"/>
+                                                </TextBlock>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!-- Simple Explanation -->
+                                <Border Background="{DynamicResource CardBgBrush}" CornerRadius="8" Padding="14" Margin="0,0,0,12">
+                                    <StackPanel>
+                                        <TextBlock Text="What it does" FontSize="11" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,6"/>
+                                        <TextBlock Text="{Binding SimpleExplanation}" FontSize="13"
+                                                   Foreground="{DynamicResource PrimaryTextBrush}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Detailed Explanation -->
+                                <Border Background="{DynamicResource CardBgBrush}" CornerRadius="8" Padding="14" Margin="0,0,0,12">
+                                    <StackPanel>
+                                        <TextBlock Text="Detailed Explanation" FontSize="11" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,6"/>
+                                        <TextBlock Text="{Binding DetailedExplanation}" FontSize="12"
+                                                   Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Why Useful -->
+                                <Border Background="{DynamicResource CardBgBrush}" CornerRadius="8" Padding="14" Margin="0,0,0,12">
+                                    <StackPanel>
+                                        <TextBlock Text="Why is this useful?" FontSize="11" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,6"/>
+                                        <TextBlock Text="{Binding WhyUseful}" FontSize="12"
+                                                   Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- How to Access -->
+                                <Border Background="{DynamicResource CardBgBrush}" CornerRadius="8" Padding="14" Margin="0,0,0,12">
+                                    <StackPanel>
+                                        <TextBlock Text="How to access" FontSize="11" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,6"/>
+                                        <TextBlock Text="{Binding HowToAccess}" FontSize="12"
+                                                   Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Keyboard Shortcut -->
+                                <Border Background="{DynamicResource CardBgBrush}" CornerRadius="8" Padding="14" Margin="0,0,0,12"
+                                        Visibility="{Binding KeyboardShortcut, Converter={StaticResource NullToVis}}">
+                                    <StackPanel>
+                                        <TextBlock Text="Keyboard Shortcut" FontSize="11" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,6"/>
+                                        <TextBlock Text="{Binding KeyboardShortcut}" FontSize="14" FontWeight="Bold"
+                                                   Foreground="{DynamicResource PrimaryTextBrush}" FontFamily="Consolas"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Command Line -->
+                                <Border Background="{DynamicResource CardBgBrush}" CornerRadius="8" Padding="14" Margin="0,0,0,12"
+                                        Visibility="{Binding CommandLine, Converter={StaticResource NullToVis}}">
+                                    <StackPanel>
+                                        <TextBlock Text="Command Line" FontSize="11" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,6"/>
+                                        <Border Background="{DynamicResource WindowBgBrush}" CornerRadius="6" Padding="10,8">
+                                            <TextBlock Text="{Binding CommandLine}" FontSize="12"
+                                                       Foreground="{DynamicResource PrimaryTextBrush}" FontFamily="Consolas"/>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Safety Info -->
+                                <Border Background="{DynamicResource CardBgBrush}" CornerRadius="8" Padding="14" Margin="0,0,0,12">
+                                    <StackPanel>
+                                        <TextBlock Text="Safety Level" FontSize="11" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,6"/>
+                                        <TextBlock Text="{Binding Safety, Converter={StaticResource SafetyToText}}" FontSize="12"
+                                                   Foreground="{Binding Safety, Converter={StaticResource SafetyToColor}}"
+                                                   FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding Difficulty, Converter={StaticResource DiffToText}}" FontSize="11"
+                                                   Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,4,0,0"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Warning -->
+                                <Border Background="#3D2F00" CornerRadius="8" Padding="14" Margin="0,0,0,12"
+                                        Visibility="{Binding WarningMessage, Converter={StaticResource NullToVis}}">
+                                    <StackPanel>
+                                        <TextBlock Text="⚠ Warning" FontSize="11" FontWeight="SemiBold"
+                                                   Foreground="#FFD700" Margin="0,0,0,6"/>
+                                        <TextBlock Text="{Binding WarningMessage}" FontSize="12"
+                                                   Foreground="#FFD700" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Action Buttons -->
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                    <Button Content="⭐ Favorite" 
+                                            Style="{StaticResource PrimaryButton}"
+                                            Command="{Binding DataContext.ToggleFavoriteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding}"
+                                            Margin="0,0,8,0"/>
+                                    <Button Content="Open →" 
+                                            Style="{StaticResource PrimaryButton}"
+                                            Background="#00B294"
+                                            Command="{Binding DataContext.LaunchFeatureCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding}"
+                                            Visibility="{Binding CanLaunch, Converter={StaticResource BoolToVis}}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </DockPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

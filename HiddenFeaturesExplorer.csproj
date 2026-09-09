@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>HiddenFeaturesExplorer</AssemblyName>
+    <RootNamespace>HiddenFeaturesExplorer</RootNamespace>
+    <Version>1.0.0</Version>
+    <Authors>Hidden Features Explorer</Authors>
+    <Description>Discover hidden Windows features, tools, and shortcuts</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Themes\*.xaml" />
+  </ItemGroup>
+
+</Project>
