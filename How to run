@@ -1,1 +1,3 @@
+First, download and install Microsoft .NET SDK 8.0.425 
+And then, use the given command to run the application
 dotnet run --project "folder path"
